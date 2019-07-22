@@ -143,7 +143,7 @@ namespace SubNetTree
             if (snMask.SelectedIndex > 0)
             {
                 ComboBoxItem typeItem = (ComboBoxItem)snMask.SelectedItem;
-                root = new IP_SubNetButton(new Forms.Button(), new Subnet.SubNet(ipTextBox.Text, snMask.SelectedIndex - 1));
+                root = new IP_SubNetButton(new Forms.Button(), new Subnet.SubNet(ipTextBox.Text, snMask.SelectedIndex - 1 + 8));
                 root.GetButton().Text = root.GetSubNet().GetIP() + "/" + root.GetSubNet().GetSubnetMask();
                 root.GetButton().AutoSize = true;
                 MakeSubNetingForm();
@@ -198,23 +198,25 @@ namespace SubNetTree
         public void MakeSubNetingForm()
         {
             f = new FrostForm();
-            f.AutoScroll = true;
-            f.Size = new System.Drawing.Size(5000, 5000);
-
+            f.AutoScroll = true; 
+               
+            f.Size = new System.Drawing.Size(600, 5000);
+            root.GetButton().Location = new System.Drawing.Point(550, 0);
             f.WindowState = Forms.FormWindowState.Maximized;
-            f.SetAutoScrollMargin(5000, 5000);
+            f.SetAutoScrollMargin(600, 5000);
 
-            root.GetButton().Location = new System.Drawing.Point(2700, 0);
+            
 
             root.GetButton().Click += (sender, args) =>
             {
+               
                 IPButton_Click();
             };
             f.Controls.Add(root.GetButton());
 
 
             f.Show();
-            f.AutoScrollPosition = new System.Drawing.Point(2500, 0);
+            f.AutoScrollPosition = root.GetButton().Location;
 
         }
         private void IPButton_Click()
@@ -272,12 +274,40 @@ namespace SubNetTree
                 IPClick(sender);
             };
         }
+        public void shiftButtons(IP_SubNetButton ip)
+        {
+            
+            if(ip.GetButton().Location.X > root.GetButton().Location.X)
+            {
+                shiftRight(root.GetRight(), root.GetRight().GetButton().Location.X);
+            }else if(ip.GetButton().Location.X < root.GetButton().Location.X){
+                shiftLeft(root.GetLeft(), root.GetLeft().GetButton().Location.X);
+            }
+        }
+        public void shiftLeft(IP_SubNetButton ip, int numShift)
+        {
+            if (ip == null) return;
+            int x = ip.GetButton().Location.X, y = ip.GetButton().Location.Y;
+            ip.GetButton().Location = new System.Drawing.Point(x - numShift, y);
+            numShift /= 2;
+            shiftLeft(ip.GetLeft(), numShift);
+            shiftLeft(ip.GetRight(), numShift);
+        }
+        public void shiftRight(IP_SubNetButton ip, int numShift)
+        {
+            if (ip == null) return;
+            int x = ip.GetButton().Location.X, y = ip.GetButton().Location.Y;
+            ip.GetButton().Location = new System.Drawing.Point(x + numShift, y);
+            numShift /= 2;
+            shiftLeft(ip.GetLeft(), numShift);
+            shiftLeft(ip.GetRight(), numShift);
+        }
 
         private void IPClick(object sender)
         {
 
 
-
+           // shiftButtons(lastClicked);
             IP_SubNetButton left = new IP_SubNetButton(new Forms.Button(),
             new Subnet.SubNet(splitSubNetLeft(lastClicked.GetSubNet().GetIP(),
                                                "/" + lastClicked.GetSubNet().GetSubnetMask()
@@ -321,34 +351,10 @@ namespace SubNetTree
         private void SetButtonLocation(IP_SubNetButton originalButton)
         {
 
-            int randomX, randomY;
-            //MessageBox.Show("");
-            Forms.Form ff = new Forms.Form();
-            ff.Size = new System.Drawing.Size(0, 0);
-            ff.FormBorderStyle = Forms.FormBorderStyle.None;  
-            ff.Show(); 
-            ff.Close();//with out the abouve 4 lines the code will not work i dont knoww why 
-            
-            randomY =  new Random().Next(0,50) +
-                originalButton.GetButton().Location.Y + (originalButton.GetButton().Height * 2);
-            randomX = (int)Math.Sqrt(randomY);
-            // LeftButtonLocation(originalButton, randomX, randomY);
-            originalButton.GetLeft().GetButton().Location = new System.Drawing.Point(randomX, randomY);
-            int r = new Random().Next(0, 100);
-            randomX = r +
-                (originalButton.GetButton().Location.X);
-            randomY = (randomX * 2);
-            while(randomY > originalButton.GetButton().Location.Y + 100)
-            {
-                randomY -= new Random().Next(0,50);
-            }
-            if (randomY < originalButton.GetButton().Location.Y) randomY = originalButton.GetButton().Location.Y;
-            originalButton.GetRight().GetButton().Location = new System.Drawing.Point(randomX, randomY);
-            
-            // RightButtonLocation(originalButton, randomX, randomY);
+            originalButton.GetLeft().GetButton().Location = new System.Drawing.Point(originalButton.GetButton().Location.X - (originalButton.GetButton().Width / 2), originalButton.GetButton().Height+ originalButton.GetButton().Location.Y );
+            originalButton.GetRight().GetButton().Location = new System.Drawing.Point(originalButton.GetLeft().GetButton().Width + originalButton.GetLeft().GetButton().Location.X + 5, originalButton.GetButton().Location.Y+ originalButton.GetButton().Height);
             f.Controls.Add(originalButton.GetLeft().GetButton());
             f.Controls.Add(originalButton.GetRight().GetButton());
-
         }
 
 

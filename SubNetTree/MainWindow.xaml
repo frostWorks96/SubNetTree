@@ -15,15 +15,7 @@
         <TextBox x:Name="nHosts" HorizontalAlignment="Left" Height="23" Margin="240,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="374,128,0,0" TextWrapping="Wrap" Text="OR" VerticalAlignment="Top"/>
         <ComboBox x:Name="snMask" HorizontalAlignment="Left" Margin="418,122,0,0" VerticalAlignment="Top" Width="166" SelectionChanged="SnMask_SelectionChanged">
-            <ComboBoxItem Content="none" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/0" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/1" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/2" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/3" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/4" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/5" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/6" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/7" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="none" HorizontalAlignment="Left" Width="118"/> 
             <ComboBoxItem Content="/8" HorizontalAlignment="Left" Width="118"/>
             <ComboBoxItem Content="/9" HorizontalAlignment="Left" Width="118"/>
             <ComboBoxItem Content="/10" HorizontalAlignment="Left" Width="118"/>
@@ -44,11 +36,11 @@
             <ComboBoxItem Content="/25" HorizontalAlignment="Left" Width="118"/>
             <ComboBoxItem Content="/26" HorizontalAlignment="Left" Width="118"/>
             <ComboBoxItem Content="/27" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/29" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="/28" HorizontalAlignment="Left" Width="118"/>
             <ComboBoxItem Content="/29" HorizontalAlignment="Left" Width="118"/>
             <ComboBoxItem Content="/30" HorizontalAlignment="Left" Width="118"/>
             <ComboBoxItem Content="/31" HorizontalAlignment="Left" Width="118"/>
-            <ComboBoxItem Content="/32" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="/32" HorizontalAlignment="Left" Width="118"/> 
 
         </ComboBox>
 
