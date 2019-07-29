@@ -57,6 +57,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Node.cs" />
+    <Compile Include="LinkedList.cs" />
     <Compile Include="FrostForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1,20 +1,31 @@
 ﻿
 using System.Windows.Forms;
-using Subnet;
-
+using Subnet; 
 namespace SubNetTree
 {
     public class IP_SubNetButton
     {
+    
+        private char lr;
+        LinkedList l;
         private Button button;
-        private IP_SubNetButton left;
-        private IP_SubNetButton right;
+        private IP_SubNetButton left, right, parent, sibling;
         private Subnet.SubNet subNet;
-
-        public IP_SubNetButton(Button button, SubNet subNet)
+        
+        public IP_SubNetButton(Button button, SubNet subNet, char c)
         {
             this.button = button;
             this.subNet = subNet;
+            lr = c;
+           
+        }
+        public char GetLeftOrRight()
+        {
+            return lr;
+        }
+        public void SetLeftOrRight(char c)
+        {
+            lr = c;
         }
         public Button GetButton()
         {
@@ -28,6 +39,14 @@ namespace SubNetTree
         {
             return right;
         }
+        public IP_SubNetButton GetParent()
+        {
+            return parent;
+        }
+        public IP_SubNetButton GetSibling()
+        {
+            return sibling;
+        }
         public Subnet.SubNet GetSubNet()
         {
             return subNet;
@@ -40,6 +59,14 @@ namespace SubNetTree
         {
             left = l;
         }
+        public void SetSibling(IP_SubNetButton l)
+        {
+            sibling = l;
+        }
+        public void SetParent(IP_SubNetButton l)
+        {
+            parent = l;
+        }
         public void SetRight(IP_SubNetButton r)
         {
             right = r;
@@ -48,6 +75,30 @@ namespace SubNetTree
         {
             subNet = s;
         }
+        public LinkedList GetList()
+        {
+            return l;
+        }
+         
+        public void BottomRowLeftMostAtHead(IP_SubNetButton ip)
+        {
+            if (ip == null) return;
+           
+            if(l==null || l.GetHead().GetIP().GetSubNet().GetSubnetMask() < ip.GetSubNet().GetSubnetMask())
+            {
+                l = new LinkedList(new Node(ip));
+            }else if(l.GetHead().GetIP().GetSubNet().GetSubnetMask() == ip.GetSubNet().GetSubnetMask())
+            {
+                if (l.GetHead().GetIP().GetButton().Location.X <= ip.GetButton().Location.X)
+                    l.Add(new Node(ip));
+                else
+                    l.AddFront(new Node(ip));
+            }
+            BottomRowLeftMostAtHead(ip.left);
+            BottomRowLeftMostAtHead(ip.right);
+            
+             
+        }
         public void printAll(IP_SubNetButton iP)
         {
             if (iP == null) return;
@@ -55,10 +106,15 @@ namespace SubNetTree
             MessageBox.Show(iP.GetSubNet().GetIP() + "/" + iP.GetSubNet().GetSubnetMask());
             printAll(iP.right);
         }
-        public void Add(IP_SubNetButton l, IP_SubNetButton r)
+        
+        public void Add(IP_SubNetButton left, IP_SubNetButton right)
         {
-            SetLeft(l);
-            SetRight(r);
+            SetLeft(left);            
+            SetRight(right);
+            GetLeft().SetSibling(GetRight());
+            GetRight().SetSibling(GetLeft());
+            GetLeft().SetParent(this);
+            GetRight().SetParent(this);
         }
         public bool Intersects(IP_SubNetButton i, Button b)
         {
@@ -68,43 +124,43 @@ namespace SubNetTree
                 if (i.GetButton().Bounds.IntersectsWith(b.Bounds)) return true;
                 else
                 {
-                    if(i.left!=null)
-                    Intersects(i.left, b);
-                    if(i.right!=null)
-                    Intersects(i.right, b);
+                    if (i.left != null)
+                        Intersects(i.left, b);
+                    if (i.right != null)
+                        Intersects(i.right, b);
                 }
             }
-           
-            
+
+
             return false;
-        } 
+        }
         public void FillAllIPs(IP_SubNetButton ip)
         {
             if (!(ip.GetSubNet().GetSubnetMask() < 31)) return;
-            
 
-                IP_SubNetButton ip1 = new IP_SubNetButton(
-                    null, new SubNet(
-                        splitSubNetLeft(
-                            ip.subNet.GetIP(), "/" + ip.subNet.GetSubnetMask()
-                            ), (ip.subNet.GetSubnetMask() + 1)
-                            )
-                    ), ip2 = new IP_SubNetButton(
-                    null, new SubNet(
-                        splitSubNetRight(
-                            ip.subNet.GetIP(), "/" + ip.subNet.GetSubnetMask()
-                            ), (ip.subNet.GetSubnetMask() + 1)
-                            )
-                    );
-                ip.Add(ip1, ip2);
-            if (ip.subNet.GetSubnetMask() <10)
+
+            IP_SubNetButton ip1 = new IP_SubNetButton(
+                null, new SubNet(
+                    splitSubNetLeft(
+                        ip.subNet.GetIP(), "/" + ip.subNet.GetSubnetMask()
+                        ), (ip.subNet.GetSubnetMask() + 1)
+                        )
+                ,'L'), ip2 = new IP_SubNetButton(
+                null, new SubNet(
+                    splitSubNetRight(
+                        ip.subNet.GetIP(), "/" + ip.subNet.GetSubnetMask()
+                        ), (ip.subNet.GetSubnetMask() + 1)
+                        ),'R'
+                );
+            ip.Add(ip1, ip2);
+            if (ip.subNet.GetSubnetMask() < 10)
             {
                 FillAllIPs(ip.left);
                 FillAllIPs(ip.right);
                 MessageBox.Show(ip.subNet.GetSubnetMask() + "");
             }
-             
-           
+
+
 
         }
         public static string splitSubNetLeft(string ip, string sub)
