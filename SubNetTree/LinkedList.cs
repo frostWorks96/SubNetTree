@@ -8,31 +8,54 @@ namespace SubNetTree
 {
     public class LinkedList
     {
-        Node head, tail;
-        public LinkedList(Node n)
+        LinkedListNode head, tail;
+        public LinkedList(LinkedListNode n)
         {
             head = n;
             tail = n;
 
         }
-        public void Add(Node n)
+        public LinkedList()
         {
-            tail.next = n;
-            tail = tail.next;
+            head = null;
+            tail = new LinkedListNode(null);
         }
-        public void AddFront(Node n)
-        {
-            Node temp = head;
-            head = n;
-            head.next = temp;
-        }
-        public Node GetHead()
+        public LinkedListNode getHead()
         {
             return head;
         }
-        public Node GetTail()
+        public void setHead(LinkedListNode n)
+        {
+            head = n;
+        }
+        public void setHead(BinaryTreeeNode n)
+        {
+            head = new LinkedListNode(n);
+        }
+        public LinkedListNode GetTail()
         {
             return tail;
+        }
+        public void add(BinaryTreeeNode node)
+        {
+            if (!contains(node))
+            {
+                tail.setNext(node);
+                if (head == null)
+                    head = tail;
+                tail = tail.getNext();
+            }
+        }
+
+        public bool contains(BinaryTreeeNode node)
+        {
+            return contains(head, node);
+        }
+        private bool contains(LinkedListNode n, BinaryTreeeNode node)
+        {
+            if (n == null) return false;
+            if (n.getData() == node) return true;
+            return contains(n.getNext(), node);
         }
     }
 }

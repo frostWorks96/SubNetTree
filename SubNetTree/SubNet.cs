@@ -10,8 +10,7 @@ namespace Subnet
     {
         private string ip;
         private int subnetMask;
-        private double numOfHosts;
-        private string brodBand;
+        private double numOfHosts; 
         public SubNet(string ipAddress, int sbnm)
         {
             this.ip = ipAddress;
@@ -29,6 +28,43 @@ namespace Subnet
         public int GetSubnetMask()
         {
             return subnetMask;
+        }
+        public string toString()
+        {
+            return "IP address: " + ip + "/" + subnetMask + "\n" +
+                   "Subnet Mask: " + convertSubNetMask() +"\n" +
+                   "Number Of hosts: "  + (Math.Pow(2, (32 - subnetMask)) -2);
+        }
+        private string convertSubNetMask()
+        {
+            string result = "";
+            int counter = 0;
+            int subnetMask = this.subnetMask;
+            while (subnetMask >= 8)
+            {
+                result += 8 * 32 + ".";
+                subnetMask -= 8;
+                counter++;
+            }
+            for(int i = counter; i < 4; i++)
+            {
+                if(subnetMask == 0 && i != 3)
+                {
+                    result += 0+".";
+                }else if(subnetMask == 0)
+                {
+                    result += 0;
+                }
+                else if(i != 3)
+                {
+                    result += subnetMask * 32 +".";
+                }
+                else
+                {
+                    result += subnetMask * 32;
+                }
+            }
+            return result;
         }
     }
 }
